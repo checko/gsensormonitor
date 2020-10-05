@@ -27,6 +27,7 @@ int main(void)
 	struct input_event ev;
 	ssize_t n;
 	int fd;
+	long stime;
 
 	fd = open(dev, O_RDONLY);
 	if (fd==-1) {
@@ -58,9 +59,18 @@ int main(void)
 				case INPUT_EVENT_Z:
 					printf("Z: %d\n",ev.value);
 					break;
+				case INPUT_EVENT_TIME_MSB:
+					stime |= (long)ev.value << 32;
+					break;
+				case INPUT_EVENT_TIME_LSB:
+					stime |= (long)ev.value & 0x00000000FFFFFFFF;
+					break;
 				default:
 					printf("NOT VALID code: %d\n",ev.code);
 			}
+		}else if (ev.type == EV_SYN) {
+			printf("%ld\n",stime);
+			stime=0;
 		}else{
 			printf("NOT VALID TYPE: %d\n",ev.type);
 		}
