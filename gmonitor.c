@@ -27,7 +27,8 @@ int main(void)
 	struct input_event ev;
 	ssize_t n;
 	int fd;
-	long stime;
+	long stime=0;
+	long ptime=0;
 
 	fd = open(dev, O_RDONLY);
 	if (fd==-1) {
@@ -69,7 +70,8 @@ int main(void)
 					printf("NOT VALID code: %d\n",ev.code);
 			}
 		}else if (ev.type == EV_SYN) {
-			printf("%ld\n",stime);
+			printf("%ld %ld\n",stime,stime-ptime); // nano sec
+			ptime = stime;
 			stime=0;
 		}else{
 			printf("NOT VALID TYPE: %d\n",ev.type);
