@@ -30,6 +30,10 @@ int main(void)
 	long stime=0;
 	long ptime=0;
 
+	int x,y,z,acc;
+	double sx,sy,sz;
+	z=y=z=sx=sy=sz=acc=0;
+
 	fd = open(dev, O_RDONLY);
 	if (fd==-1) {
 		fprintf(stderr,"Cannot open %s: %s\n",dev,strerror(errno));
@@ -52,13 +56,13 @@ int main(void)
 		if(ev.type == INPUT_EVENT_TYPE) {
 			switch(ev.code) {
 				case INPUT_EVENT_X:
-					printf("X: %d\n",ev.value);
+					x = ev.value;
 					break;
 				case INPUT_EVENT_Y:
-					printf("Y: %d\n",ev.value);
+					y = ev.value;
 					break;
 				case INPUT_EVENT_Z:
-					printf("Z: %d\n",ev.value);
+					z = ev.value;
 					break;
 				case INPUT_EVENT_TIME_MSB:
 					stime |= (long)ev.value << 32;
@@ -70,9 +74,21 @@ int main(void)
 					printf("NOT VALID code: %d\n",ev.code);
 			}
 		}else if (ev.type == EV_SYN) {
-			printf("%ld %ld\n",stime,stime-ptime); // nano sec
-			ptime = stime;
-			stime=0;
+			stime = stime/1000000000;
+			if(ptime != stime){
+				sx = sx/acc/100000.;
+				sy = sy/acc/100000.;
+				sz = sz/acc/100000.;
+				printf("%5.2f %5.2f %5.2f %ld\n",sx,sy,sz,stime);
+				ptime = stime;
+				x=y=z=sx=sy=sz=acc=0;
+			}else{
+				sx += x;
+				sy += y;
+				sz += z;
+				acc++;
+			}
+			stime = 0;
 		}else{
 			printf("NOT VALID TYPE: %d\n",ev.type);
 		}
