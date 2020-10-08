@@ -5,6 +5,13 @@
 #include <errno.h>
 #include <linux/input.h>
 #include <string.h>
+#include <signal.h>
+
+static volatile int KeepRunning = 1;
+void intHandler(int dummy)
+{
+	KeepRunning = 0;
+}
 
 
 static const char * const evval[]={
@@ -40,7 +47,9 @@ int main(void)
 		return EXIT_FAILURE;
 	}
 
-	while(1) {
+	signal(SIGINT, intHandler);
+
+	while(KeepRunning) {
 		n = read(fd, &ev, sizeof(ev));
 		if (n == (ssize_t)-1) {
 			if (errno==EINTR)
@@ -94,7 +103,7 @@ int main(void)
 		}
 
 	}
-	fflush(stdout);
-	fprintf(stderr,"%s.\n",strerror(errno));
-	return EXIT_FAILURE;
+
+	printf("Exit!!\n");
+	return 0;
 }
