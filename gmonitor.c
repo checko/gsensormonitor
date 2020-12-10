@@ -85,10 +85,12 @@ int main(void)
 		}else if (ev.type == EV_SYN) {
 			stime = stime/1000000000;
 			if(ptime != stime){
-				sx = sx/acc/100000.;
-				sy = sy/acc/100000.;
-				sz = sz/acc/100000.;
-				printf("%5.2f %5.2f %5.2f %ld\n",sx,sy,sz,stime);
+				if(acc!=0) {
+					sx = sx/acc/100000.;
+					sy = sy/acc/100000.;
+					sz = sz/acc/100000.;
+					printf("%5.2f,%5.2f,%5.2f,%d\n",sx,sy,sz,acc);
+				}
 				ptime = stime;
 				x=y=z=sx=sy=sz=acc=0;
 			}else{
