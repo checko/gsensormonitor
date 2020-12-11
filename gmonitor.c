@@ -85,6 +85,7 @@ int main(void)
 					break;
 				default:
 					printf("NOT VALID code: %d\n",ev.code);
+					fflush(stdout);
 			}
 		}else if (ev.type == EV_SYN) {
 			stime = stime/1000000000;
@@ -94,6 +95,7 @@ int main(void)
 					sy = sy/acc/100000.;
 					sz = sz/acc/100000.;
 					printf("%.2f,%.2f,%.2f,%d,%s\n",sx,sy,sz,acc,getspeed());
+					fflush(stdout);
 				}
 				ptime = stime;
 				x=y=z=sx=sy=sz=acc=0;
@@ -106,11 +108,13 @@ int main(void)
 			stime = 0;
 		}else{
 			printf("NOT VALID TYPE: %d\n",ev.type);
+			fflush(stdout);
 		}
 
 	}
 
 	closefile();
 	printf("Exit!!\n");
+	fflush(stdout);
 	return 0;
 }
