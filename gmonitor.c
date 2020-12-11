@@ -7,6 +7,8 @@
 #include <string.h>
 #include <signal.h>
 
+#include "gpsspeed.h"
+
 static volatile int KeepRunning = 1;
 void intHandler(int dummy)
 {
@@ -36,6 +38,8 @@ int main(void)
 	int fd;
 	long stime=0;
 	long ptime=0;
+
+	waitfileready();
 
 	int x,y,z,acc;
 	double sx,sy,sz;
@@ -89,7 +93,7 @@ int main(void)
 					sx = sx/acc/100000.;
 					sy = sy/acc/100000.;
 					sz = sz/acc/100000.;
-					printf("%5.2f,%5.2f,%5.2f,%d\n",sx,sy,sz,acc);
+					printf("%.2f,%.2f,%.2f,%d,%s\n",sx,sy,sz,acc,getspeed());
 				}
 				ptime = stime;
 				x=y=z=sx=sy=sz=acc=0;
@@ -106,6 +110,7 @@ int main(void)
 
 	}
 
+	closefile();
 	printf("Exit!!\n");
 	return 0;
 }
