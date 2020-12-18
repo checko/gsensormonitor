@@ -88,7 +88,7 @@ int main(void)
 					fflush(stdout);
 			}
 		}else if (ev.type == EV_SYN) {
-			stime = stime/1000000000;
+			stime = stime*2/1000000000;
 			if(ptime != stime){
 				if(acc!=0) {
 					sx = sx/acc/100000.;
