@@ -10,4 +10,4 @@ export PATH=\
 
 cp /sdcard/gmonitor /usr/local/bin/
 cp /sdcard/startgmonitor.sh /usr/local/bin/
-echo "startgmonitor.sh" >> /etc/rc.local
+echo -e "\nstartgmonitor.sh" >> /etc/rc.local
