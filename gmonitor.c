@@ -8,6 +8,7 @@
 #include <signal.h>
 
 #include "gpsspeed.h"
+#include "sfio.h"
 
 static volatile int KeepRunning = 1;
 void intHandler(int dummy)
@@ -52,6 +53,7 @@ int main(void)
 	}
 
 	signal(SIGINT, intHandler);
+	sfopen("/data/gs");
 
 	while(KeepRunning) {
 		n = read(fd, &ev, sizeof(ev));
@@ -84,7 +86,7 @@ int main(void)
 					stime |= (long)ev.value & 0x00000000FFFFFFFF;
 					break;
 				default:
-					printf("NOT VALID code: %d\n",ev.code);
+					sfprintf("NOT VALID code: %d\n",(int)ev.code);
 					fflush(stdout);
 			}
 		}else if (ev.type == EV_SYN) {
@@ -94,8 +96,7 @@ int main(void)
 					sx = sx/acc/100000.;
 					sy = sy/acc/100000.;
 					sz = sz/acc/100000.;
-					printf("%.2f,%.2f,%.2f,%d,%s\n",sx,sy,sz,acc,getspeed());
-					fflush(stdout);
+					sfprintf("%.2f,%.2f,%.2f,%d,%s\n",sx,sy,sz,acc,getspeed());
 				}
 				ptime = stime;
 				x=y=z=sx=sy=sz=acc=0;
@@ -107,14 +108,13 @@ int main(void)
 			}
 			stime = 0;
 		}else{
-			printf("NOT VALID TYPE: %d\n",ev.type);
-			fflush(stdout);
+			sfprintf("NOT VALID TYPE: %d\n",(int)ev.type);
 		}
 
 	}
 
 	closefile();
-	printf("Exit!!\n");
-	fflush(stdout);
+	sfprintf("Exit!!\n");
+	sfclose();
 	return 0;
 }
