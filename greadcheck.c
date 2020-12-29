@@ -22,6 +22,13 @@ static const char * const evval[]={
 #define INPUT_EVENT_TIME_MSB    MSC_SCAN
 #define INPUT_EVENT_TIME_LSB    MSC_MAX
 
+void writeOK(void)
+{
+	FILE *fd = fopen("/tmp/gsensorok","w");
+	if (fd != NULL)
+		fclose(fd);
+}
+
 
 int main(void)
 {
@@ -42,7 +49,7 @@ int main(void)
 
 	fd = open(dev, O_RDONLY);
 	if (fd==-1) {
-		fprintf(stderr,"Cannot open %s: %s\n",dev,strerror(errno));
+		printf("Cannot open %s: %s\n",dev,strerror(errno));
 		return EXIT_FAILURE;
 	}
 
@@ -53,22 +60,22 @@ int main(void)
 
 	rv = select(fd + 1, &set, NULL, NULL, &timeout);
 	if(rv == -1){
-		fprintf(stderr,"cannot select\n");
+		printf("cannot select\n");
 		return EXIT_FAILURE;
 	}else if(rv==0){
 		printf("TimeOut!\n");
 	}else{
 		n = read(fd, &ev, sizeof(ev));
 		if (n != sizeof(ev)) {
-			fprintf(stderr,"read error\n");
+			printf("read error\n");
 			return EXIT_FAILURE;
 		}
 
 		printf("OK!\n");
+		writeOK();
 
 	}
 
-	printf("Exit!!\n");
 	fflush(stdout);
 	return 0;
 }
