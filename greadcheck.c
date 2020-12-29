@@ -8,20 +8,6 @@
 #include <signal.h>
 #include <sys/select.h>
 
-
-static const char * const evval[]={
-	"RELEASED",
-	"PRESSED",
-	"REPEATED"
-};
-
-#define INPUT_EVENT_TYPE    EV_MSC
-#define INPUT_EVENT_X       MSC_SERIAL
-#define INPUT_EVENT_Y       MSC_PULSELED
-#define INPUT_EVENT_Z       MSC_GESTURE
-#define INPUT_EVENT_TIME_MSB    MSC_SCAN
-#define INPUT_EVENT_TIME_LSB    MSC_MAX
-
 void writeOK(void)
 {
 	FILE *fd = fopen("/tmp/gsensorok","w");
@@ -36,16 +22,11 @@ int main(void)
 	struct input_event ev;
 	ssize_t n;
 	int fd;
-	long stime=0;
-	long ptime=0;
 	int rv;
 
 	fd_set set;
 	struct timeval timeout;
 
-	int x,y,z,acc;
-	double sx,sy,sz;
-	z=y=z=sx=sy=sz=acc=0;
 
 	fd = open(dev, O_RDONLY);
 	if (fd==-1) {
