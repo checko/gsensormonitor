@@ -27,13 +27,21 @@ char* getspeed(void)
 
 void waitfileready(void)
 {
+	do
+	{
+		sleep(5);
+		pFile = fopen("/tmp/gpsfix","rb");
+	}while(pFile==NULL);
+	fclose(pFile);
+
 	while(1) {
 		pFile = fopen("/tmp/gpsdata.txt","rb");
 		if (pFile!=NULL) {
 			return;
 		}
-		sleep(5);
+		sleep(1);
 	}
+
 }
 
 void closefile(void)
